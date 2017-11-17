@@ -1,0 +1,67 @@
+/home/ramdisk/experiment5/projects/elasticsearch/revisions/rev_889db1c_34f4ca7/rev_889db1c-34f4ca7/src/test/java/org/elasticsearch/discovery/ZenUnicastDiscoveryTests.java;<<<<<<< MINE
+   public void setUP() throws Exception {
+       ElasticsearchIntegrationTest.beforeClass();
+       currentNumNodes = randomIntBetween(3, 5);
+       currentNumOfUnicastHosts = randomIntBetween(1, currentNumNodes);
+       currentBaseHttpPort = 25000 + randomInt(100);
+   }
+
+   @Override
+   protected Settings nodeSettings(int nodeOrdinal) {
+       ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
+               .put(super.nodeSettings(nodeOrdinal))
+               .put("discovery.type", "zen")
+               .put("discovery.zen.ping.multicast.enabled", false)
+               .put("http.enabled", false); // just to make test quicker
+
+
+       String[] unicastHosts = new String[currentNumOfUnicastHosts];
+       if (internalCluster().getDefaultSettings().get("node.mode").equals("local")) {
+           builder.put(LocalTransport.TRANSPORT_LOCAL_ADDRESS, "unicast_test_" + nodeOrdinal);
+           for (int i = 0; i < unicastHosts.length; i++) {
+               unicastHosts[i] = "unicast_test_" + i;
+           }
+       } else {
+           // we need to pin the node ports so we'd know where to point things
+           builder.put("transport.tcp.port", currentBaseHttpPort + nodeOrdinal);
+           for (int i = 0; i < unicastHosts.length; i++) {
+               unicastHosts[i] = "localhost:" + (currentBaseHttpPort + i);
+           }
+       }
+       builder.putArray("discovery.zen.ping.unicast.hosts", unicastHosts);
+       return builder.build();
+||||||| BASE
+   public void setUP() throws Exception {
+       ElasticsearchIntegrationTest.beforeClass();
+       currentNumNodes = randomIntBetween(3, 5);
+       currentNumOfUnicastHosts = randomIntBetween(1, currentNumNodes);
+       currentBaseHttpPort = 25000 + randomInt(100);
+   }
+
+   @Override
+   protected Settings nodeSettings(int nodeOrdinal) {
+       ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
+               .put("discovery.type", "zen")
+               .put("discovery.zen.ping.multicast.enabled", false)
+               .put("http.enabled", false) // just to make test quicker
+               .put(super.nodeSettings(nodeOrdinal));
+
+       String[] unicastHosts = new String[currentNumOfUnicastHosts];
+       if (internalCluster().getDefaultSettings().get("node.mode").equals("local")) {
+           builder.put(LocalTransport.TRANSPORT_LOCAL_ADDRESS, "unicast_test_" + nodeOrdinal);
+           for (int i = 0; i < unicastHosts.length; i++) {
+               unicastHosts[i] = "unicast_test_" + i;
+           }
+       } else {
+           // we need to pin the node ports so we'd know where to point things
+           builder.put("transport.tcp.port", currentBaseHttpPort + nodeOrdinal);
+           for (int i = 0; i < unicastHosts.length; i++) {
+               unicastHosts[i] = "localhost:" + (currentBaseHttpPort + i);
+           }
+       }
+       builder.putArray("discovery.zen.ping.unicast.hosts", unicastHosts);
+       return builder.build();
+=======
+   public void clearConfig() {
+       discoveryConfig = null;
+>>>>>>> YOURS
